@@ -76,7 +76,9 @@ USB は libusb の API だけを叩き、Linux の usbfs には直接触りま�
 
 Windows は当初「BonDriver があるから恩恵は小さい」と思っていましたが、これは誤りでした。ユーザ空間なら防御を一段下げずに済みます。
 
-Android はいまのところ Termux のみです。APK 版も出すつもりでいます。
+Android はいまのところ Termux のみです。APK 版はこちらで開発中です。
+
+https://github.com/Khronos31/dtv-android
 
 macOS は実機を持っていないため未検証です。動作報告も不具合報告も歓迎します。
 
