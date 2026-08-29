@@ -156,6 +156,45 @@ claude --version
 # => 2.1.202 (Claude Code) のように最新版が表示されればOK
 ```
 
+## 追記(2026/08/29)
+
+同じ方法で Codex CLI も Termux 上で動かせることを確認しました。Claude Code と共通する `proot` による DNS 回避などは省略します。
+
+Codex の公式インストーラは `aarch64-unknown-linux-musl` の静的バイナリを配布しています。Claude Code のように Alpine から musl ランタイムを取り出したり、`patchelf` でインタプリタを書き換えたりする必要はありません。
+
+更新時は、公式インストーラを非対話モードで一時ディレクトリへ実行し、`CODEX_HOME` を明示します。
+
+```bash
+STAGING_DIR="$HOME/musl-compat/codex-update-bin"
+rm -rf "$STAGING_DIR"
+mkdir -p "$STAGING_DIR"
+
+curl -fsSL https://chatgpt.com/codex/install.sh | \
+  CODEX_NON_INTERACTIVE=1 \
+  CODEX_HOME="$HOME/.codex" \
+  CODEX_INSTALL_DIR="$STAGING_DIR" \
+  sh
+
+mv -f "$STAGING_DIR/codex" "$PREFIX/bin/codex.real"
+"$PREFIX/bin/codex.real" --version
+```
+
+Termux から呼び出す `codex` はラッパーにします。Codex 固有の点は、`SSL_CERT_FILE` を Termux の証明書へ向け、実体を `codex.real` として分離していることです。
+
+```bash
+#!/data/data/com.termux/files/usr/bin/bash
+set -euo pipefail
+
+PREFIX=/data/data/com.termux/files/usr
+HOME_DIR=/data/data/com.termux/files/home
+
+export SSL_CERT_FILE="$PREFIX/etc/tls/cert.pem"
+exec proot -b "$HOME_DIR/musl-compat/resolv.conf:/etc/resolv.conf" \
+  "$PREFIX/bin/codex.real" --dangerously-bypass-approvals-and-sandbox "$@"
+```
+
+この構成で、実機では `codex-cli 0.146.0` の起動を確認しました。`--dangerously-bypass-approvals-and-sandbox` は Codex の保護機能を無効化するオプションなので、信頼できる端末と作業ディレクトリだけで使用してください。
+
 ## 今後のバージョン更新
 
 手順4〜5を自動化したスクリプトを用意しておくと楽です。
