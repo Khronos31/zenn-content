@@ -1,3 +1,6 @@
 node_modules
 .DS_Store
 .obsidian/
+qiita-token.env
+.qiita-token.env.swp
+.qiita/items.json
