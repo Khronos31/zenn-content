@@ -1,5 +1,5 @@
 ---
-title: "Home AssistantでCANDY HOUSE SESAMEをローカルで扱おうと思ってIntegrationを自作したけど車輪の再発明だった"
+title: "Home AssistantでCANDY HOUSE SESAMEをローカル操作するIntegrationを自作したら車輪の再発明だった"
 emoji: "🔑"
 type: "tech"
 topics: ["homeassistant", "esphome", "bluetooth", "sesame", "hacs"]
